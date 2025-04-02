@@ -4,7 +4,7 @@
  */
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
-	"name": "flat-wildflower-62f1",
+	"name": "echo-url",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-03-27",
 	"observability": {
