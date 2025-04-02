@@ -38,7 +38,7 @@ export function renderHtml(content: string) {
     
       <body>
         <header>
-          <h1>URL Echo</h1>
+          <h1>Echo URL</h1>
             <!-- 输出链接的 p 标签 -->
           <p id="output">
             <!-- 拼接出来的 URL 会显示在这里 -->
