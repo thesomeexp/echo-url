@@ -5,7 +5,7 @@ export function renderHtml(content: string) {
       <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>D1</title>
+        <title>Echo URL</title>
         <link rel="stylesheet" type="text/css" href="https://static.integrations.cloudflare.com/styles.css">
         <style>
           /* Toast 样式 */
