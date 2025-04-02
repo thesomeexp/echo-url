@@ -135,7 +135,7 @@ export function renderHtml(content: string) {
             const newURL = window.location.origin + '/edit/' + type + '/' + compressedText;
 
             // 使用 history.pushState 或 history.replaceState 更新浏览器的地址栏
-            history.pushState(null, '', newURL); // 替换浏览器地址栏的 URL（不刷新页面）
+            history.replaceState(null, '', newURL); // 替换浏览器地址栏的 URL（不刷新页面）
 
           }
             
