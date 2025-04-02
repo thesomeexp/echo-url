@@ -64,7 +64,7 @@ export function renderHtml(content: string) {
           <!-- 错误提示 p 标签 -->
           <p id="error-message" style="color: red; display: none;">JSON format is incorrect.</p>
 
-          <textarea id="myTextarea" style="width: 100%; height: 50vh; box-sizing: border-box; padding: 5px; text-align: left; line-height: 1.2; vertical-align: top;" oninput="updateText()"></textarea>
+          <textarea id="myTextarea" style="width: 100%; height: 50vh; box-sizing: border-box; padding: 5px; text-align: left; line-height: 1.2; vertical-align: top;" oninput="updateTextByInput()"></textarea>
           <div style="position: relative; text-align: center; margin-top: 20px;">
             
           <p style="position: relative; bottom: 0; left: 50%; transform: translateX(-50%); padding: 10px; background: #f0f0f0; text-decoration: none;">
@@ -78,6 +78,10 @@ export function renderHtml(content: string) {
           // 服务器的基础地址
           const baseURL = window.location.origin + '/echo';
 
+          function updateTextByInput() {
+            console.log('updateTextByInput: ')
+            updateText()
+          }
           // 定义更新内容并回显的函数
           function updateText() {
             // 获取 textarea 中的内容
