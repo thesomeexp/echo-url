@@ -1,0 +1,29 @@
+/* 防止 iOS 自动缩放 */
+input,
+textarea {
+    font-size: 16px;
+}
+
+/* Toast 样式 */
+.toast {
+    visibility: hidden;
+    opacity: 0;
+    position: fixed;
+    min-width: 250px;
+    left: 50%;
+    top: 50px;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 17px;
+    text-align: center;
+    z-index: 1;
+    transition: opacity 0.5s, visibility 0.5s;
+}
+
+.toast.show {
+    visibility: visible;
+    opacity: 1;
+}

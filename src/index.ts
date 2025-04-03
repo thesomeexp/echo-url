@@ -10,7 +10,6 @@
  *
  * Learn more at https://developers.cloudflare.com/workers/
  */
-import { renderHtml } from "./renderHtml";
 // 确保 LZString 已引入
 import LZString from "lz-string";
 
@@ -26,11 +25,7 @@ export default {
 		const data = segments[2] || '';   // 获取第3个部分 "data"
 		switch (prefix) {
 		  case 'edit':
-			return new Response(renderHtml(data), {
-				headers: {
-				  "content-type": "text/html",
-				},
-			  });
+			return new Response("Error");
 		  case 'echo':
 			switch (type) {
 				case 'plain': {
@@ -58,18 +53,13 @@ export default {
 					// console.log('jsonObject: ', jsonObject)
 					return new Response(text, {
 						headers: {
-						  "content-type": "text/json",
+						  "content-type": "application/json; charset=utf-8",
 						},
 					  });
 				}
 			}
 		  default:
-			return new Response(null, {
-				status: 302,
-				headers: {
-				  'Location': '/edit'
-				}
-			  });
+			return new Response("Error");
 		}
 		
 	},
