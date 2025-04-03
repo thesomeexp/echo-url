@@ -10,7 +10,6 @@
  *
  * Learn more at https://developers.cloudflare.com/workers/
  */
-// 确保 LZString 已引入
 import LZString from "lz-string";
 
 export default {
@@ -24,16 +23,11 @@ export default {
 		const type = segments[1] || '';   // 获取第二个部分 "type"
 		const data = segments[2] || '';   // 获取第3个部分 "data"
 		switch (prefix) {
-		  case 'edit':
-			return new Response("Error");
 		  case 'echo':
 			switch (type) {
 				case 'plain': {
-					// console.log('data: ', data)
 					const dUri = decodeURIComponent(data)
-					// console.log('dUri: ', dUri)
 					const text = LZString.decompressFromEncodedURIComponent(dUri);
-					// console.log('text: ', text)
 					return new Response(text, {
 						headers: {
 						  "content-type": "text/plain; charset=utf-8",
@@ -41,16 +35,7 @@ export default {
 					  });
 				}
 				case 'json': {
-					// console.log('data: ', data)
-					// const dUri = decodeURIComponent(data)
-					// console.log('dUri: ', dUri)
 					const text = LZString.decompressFromEncodedURIComponent(data);
-					// console.log('text: ', text)
-					// const jsonContentText = decodeURIComponent(text)
-					// console.log('jsonContentText: ', jsonContentText)
-					// 解析 JSON
-					// const jsonObject = JSON.parse(jsonContentText);
-					// console.log('jsonObject: ', jsonObject)
 					return new Response(text, {
 						headers: {
 						  "content-type": "application/json; charset=utf-8",

@@ -3,7 +3,6 @@
 const baseURL = window.location.origin + '/echo';
 
 function updateTextByInput() {
-    // console.log('updateTextByInput: ')
     updateText()
 }
 // 定义更新内容并回显的函数
@@ -36,7 +35,6 @@ function updateText() {
 
     // 使用 LZString 进行压缩
     const compressedText = LZString.compressToEncodedURIComponent(textareaValue);
-    // console.log('compressedText: ', compressedText)
 
     // 拼接成完整的 URL 地址
     const fullURL = baseURL + '/' + type + '/' + compressedText;
@@ -63,9 +61,10 @@ function updateText() {
     }
 
     // 构造新的 URL，根据 type 设置新的参数
-    const newURL = window.location.origin + '/edit/' + type + '/' + compressedText;
+    // const newURL = window.location.origin + '/edit/' + type + '/' + compressedText;
 
     // 使用 history.pushState 或 history.replaceState 更新浏览器的地址栏
+    // 注: Chrome 可能会请求刷新页面, 导致触发 Worker
     // history.replaceState(null, '', newURL); // 替换浏览器地址栏的 URL（不刷新页面）
 
 }
