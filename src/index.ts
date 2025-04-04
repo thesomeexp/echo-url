@@ -14,38 +14,26 @@ import LZString from "lz-string";
 
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
-		const url = new URL(request.url);
-		const path = url.pathname.slice(1); // 去掉开头的 "/"
-
-		// 获取路径的前两个部分
-		const segments = path.split('/'); // 分割路径
-		const prefix = segments[0] || ''; // 获取第一个部分 "aaa"
-		const type = segments[1] || '';   // 获取第二个部分 "type"
-		const data = segments[2] || '';   // 获取第3个部分 "data"
-		switch (prefix) {
-		  case 'echo':
-			switch (type) {
-				case 'plain': {
-					const dUri = decodeURIComponent(data)
-					const text = LZString.decompressFromEncodedURIComponent(dUri);
-					return new Response(text, {
-						headers: {
-						  "content-type": "text/plain; charset=utf-8",
-						},
-					  });
-				}
-				case 'json': {
-					const text = LZString.decompressFromEncodedURIComponent(data);
-					return new Response(text, {
-						headers: {
-						  "content-type": "application/json; charset=utf-8",
-						},
-					  });
-				}
+		let data = request.url.split('?')[1] || '';
+		let type = data.startsWith('plain') ? 'plain' : 'json';
+		data = data.slice(type.length); 
+		const text = LZString.decompressFromEncodedURIComponent(data);
+		switch (type) {
+			case 'plain': {
+				return new Response(text, {
+					headers: {
+					  "content-type": "text/plain; charset=utf-8",
+					},
+				  });
 			}
-		  default:
-			return new Response("Error");
+			case 'json': {
+				return new Response(text, {
+					headers: {
+					  "content-type": "application/json; charset=utf-8",
+					},
+				  });
+			}
 		}
-		
+		return new Response("Error");
 	},
 } satisfies ExportedHandler<Env>;

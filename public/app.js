@@ -1,6 +1,6 @@
 
 // 服务器的基础地址
-const baseURL = window.location.origin + '/echo';
+const baseURL = window.location.origin + '/echo?';
 
 function updateTextByInput() {
     updateText()
@@ -37,7 +37,7 @@ function updateText() {
     const compressedText = LZString.compressToEncodedURIComponent(textareaValue);
 
     // 拼接成完整的 URL 地址
-    const fullURL = baseURL + '/' + type + '/' + compressedText;
+    const fullURL = baseURL + type + compressedText;
 
     // 更新 p 标签的文本内容
     const outputLink = document.getElementById('linkOutput');
@@ -61,11 +61,11 @@ function updateText() {
     }
 
     // 构造新的 URL，根据 type 设置新的参数
-    // const newURL = window.location.origin + '/edit/' + type + '/' + compressedText;
+    const newURL = window.location.origin + '/edit?' + type + compressedText;
 
     // 使用 history.pushState 或 history.replaceState 更新浏览器的地址栏
     // 注: Chrome 可能会请求刷新页面, 导致触发 Worker
-    // history.replaceState(null, '', newURL); // 替换浏览器地址栏的 URL（不刷新页面）
+    history.replaceState(null, '', newURL); // 替换浏览器地址栏的 URL（不刷新页面）
 
 }
 
@@ -95,37 +95,14 @@ function showToast() {
 
 // 页面加载完成后执行 updateText()
 window.onload = function () {
-    const url = new URL(window.location.href);
-    // console.log('url: ', url)
-    const path = url.pathname.slice(1); // 去掉开头的 "/"
-    // 获取路径的前两个部分
-    const segments = path.split('/'); // 分割路径
-    const prefix = segments[0] || ''; // 获取第一个部分 "aaa"
-    const type = segments[1] || '';   // 获取第二个部分 "type"
-    const data = segments[2] || '';   // 获取第3个部分 "data"
-    // console.log('segments: ', segments)
-
-    if (type === 'json') {
-        document.getElementById('jsonOption').checked = true; // 设置 jsonOption 为选中
-    } else if (type === 'plain') {
+    const url = window.location.href;
+    const data = url.split('?')[1] || '';
+    let type = 'json';
+    if (data.startsWith('plain')) {
+        type = 'plain'
         document.getElementById('plainOption').checked = true; // 设置 plainOption 为选中
-    }
-
-    switch (type) {
-        case 'plain': {
-            const dUri = decodeURIComponent(data)
-            const text = LZString.decompressFromEncodedURIComponent(dUri);
-            document.getElementById('myTextarea').value = text;
-            break;
-        }
-        case 'json': {
-            const dUri = decodeURIComponent(data)
-            const text = LZString.decompressFromEncodedURIComponent(dUri);
-            document.getElementById('myTextarea').value = JSON.stringify(JSON.parse(text), null, 2);
-            break;
-        }
-        default: {
-        }
+    } else {
+        document.getElementById('jsonOption').checked = true; // 设置 jsonOption 为选中
     }
 
     // 页面加载完成时执行一次更新函数
