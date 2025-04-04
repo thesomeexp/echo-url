@@ -96,7 +96,7 @@ function showToast() {
 // 页面加载完成后执行 updateText()
 window.onload = function () {
     const url = window.location.href;
-    const data = url.split('?')[1] || '';
+    let data = url.split('?')[1] || '';
     let type = 'json';
     if (data.startsWith('plain')) {
         type = 'plain'
@@ -104,7 +104,8 @@ window.onload = function () {
     } else {
         document.getElementById('jsonOption').checked = true; // 设置 jsonOption 为选中
     }
-
+    data = data.slice(type.length); 
+    document.getElementById('myTextarea').value = LZString.decompressFromEncodedURIComponent(data)
     // 页面加载完成时执行一次更新函数
     updateText();
 
