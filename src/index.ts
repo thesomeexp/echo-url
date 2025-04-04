@@ -15,7 +15,12 @@ import LZString from "lz-string";
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
 		let data = request.url.split('?')[1] || '';
-		let type = data.startsWith('plain') ? 'plain' : 'json';
+		let type = '' ;
+		if (data.startsWith('plain')) {
+			type = 'plain'
+		} else if (data.startsWith('json')) {
+			type = 'json'
+		}
 		data = data.slice(type.length); 
 		const text = LZString.decompressFromEncodedURIComponent(data);
 		switch (type) {
