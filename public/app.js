@@ -34,7 +34,7 @@ function updateText() {
     }
 
     // 使用 LZString 进行压缩
-    const compressedText = LZString.compressToEncodedURIComponent(textareaValue);
+    const compressedText = textareaValue ? LZString.compressToEncodedURIComponent(textareaValue) : '';
 
     // 拼接成完整的 URL 地址
     const fullURL = baseURL + type + compressedText;

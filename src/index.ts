@@ -33,10 +33,15 @@ export default {
             
             const compressedData = query.slice(dataStartIndex);
             if (!compressedData) {
-                return new Response("Error: No data provided", { status: 400 });
+                return new Response("", {
+                    headers: { "content-type": contentType },
+                });
             }
             
-            const text = LZString.decompressFromEncodedURIComponent(compressedData);
+            let text = LZString.decompressFromEncodedURIComponent(compressedData);
+            if (!text) {
+                return new Response("Error: Decompression failed", { status: 400 });
+            }
             
             return new Response(text, {
                 headers: { "content-type": contentType },
