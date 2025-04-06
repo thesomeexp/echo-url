@@ -37,9 +37,6 @@ export default {
             }
             
             const text = LZString.decompressFromEncodedURIComponent(compressedData);
-            if (!text) {
-                return new Response("Error: Decompression failed", { status: 400 });
-            }
             
             return new Response(text, {
                 headers: { "content-type": contentType },
