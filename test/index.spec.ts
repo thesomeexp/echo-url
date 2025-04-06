@@ -7,19 +7,72 @@ import worker from '../src/index';
 // `Request` to pass to `worker.fetch()`.
 const IncomingRequest = Request<unknown, IncomingRequestCfProperties>;
 
-describe('Hello World worker', () => {
-	it('responds with Hello World! (unit style)', async () => {
-		const request = new IncomingRequest('http://example.com');
-		// Create an empty context to pass to `worker.fetch()`.
-		const ctx = createExecutionContext();
-		const response = await worker.fetch(request, env, ctx);
-		// Wait for all `Promise`s passed to `ctx.waitUntil()` to settle before running test assertions
-		await waitOnExecutionContext(ctx);
-		expect(await response.text()).toMatchInlineSnapshot(`"Hello World!"`);
-	});
+describe('echo-url worker', () => {
+	
+  // 测试解压功能
+  it('should decompress plain text correctly', async () => {
+    const compressed = "tHKkp-RwKoIW6Orahk3oTHJA"; // 这里放实际压缩后的字符串
+    const request = new IncomingRequest(`http://example.com/echo?plain${compressed}`);
+    const ctx = createExecutionContext();
+    
+    const response = await worker.fetch(request, {}, ctx);
+    await waitOnExecutionContext(ctx);
+    
+    expect(response.status).toBe(200);
+    expect(response.headers.get('content-type')).toContain('text/plain');
+    expect(await response.text()).toMatchInlineSnapshot(`"压缩后的字符串"`);
+  });
+  
+  // 测试JSON解压
+  it('should decompress JSON correctly', async () => {
+    const compressed = "N4XyA";
+    const request = new IncomingRequest(`http://example.com/?json${compressed}`);
+    const ctx = createExecutionContext();
+    
+    const response = await worker.fetch(request, {}, ctx);
+    await waitOnExecutionContext(ctx);
+    
+    expect(response.status).toBe(200);
+    expect(response.headers.get('content-type')).toContain('application/json');
+    expect(await response.text()).toMatchInlineSnapshot(`"{}"`);
+  });
 
-	it('responds with Hello World! (integration style)', async () => {
-		const response = await SELF.fetch('https://example.com');
-		expect(await response.text()).toMatchInlineSnapshot(`"Hello World!"`);
-	});
+
+  // 测试错误处理
+  it('should handle decompression failure', async () => {
+    const invalidData = "无效的压缩数据";
+    const request = new IncomingRequest(`http://example.com/?plain${invalidData}`);
+    const ctx = createExecutionContext();
+    
+    const response = await worker.fetch(request, {}, ctx);
+    await waitOnExecutionContext(ctx);
+    
+    expect(response.status).toBe(400);
+    expect(await response.text()).toContain(`Error: Decompression failed`);
+  });
+
+  // 测试CORS头
+  it('should include CORS headers', async () => {
+    const request = new IncomingRequest('http://example.com/?plaintest');
+    const ctx = createExecutionContext();
+    
+    const response = await worker.fetch(request, {}, ctx);
+    await waitOnExecutionContext(ctx);
+    
+    expect(response.headers.get('Access-Control-Allow-Origin')).toBe('*');
+  });
+
+  // 测试OPTIONS预检请求
+  it('should handle OPTIONS request', async () => {
+    const request = new IncomingRequest('http://example.com/', {
+      method: 'OPTIONS'
+    });
+    const ctx = createExecutionContext();
+    
+    const response = await worker.fetch(request, {}, ctx);
+    await waitOnExecutionContext(ctx);
+    
+    expect(response.status).toBe(200);
+    expect(response.headers.get('Access-Control-Allow-Methods')).toContain('GET');
+  });
 });
