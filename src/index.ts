@@ -14,31 +14,39 @@ import LZString from "lz-string";
 
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
-		let data = request.url.split('?')[1] || '';
-		let type = '' ;
-		if (data.startsWith('plain')) {
-			type = 'plain'
-		} else if (data.startsWith('json')) {
-			type = 'json'
-		}
-		data = data.slice(type.length); 
-		const text = LZString.decompressFromEncodedURIComponent(data);
-		switch (type) {
-			case 'plain': {
-				return new Response(text, {
-					headers: {
-					  "content-type": "text/plain; charset=utf-8",
-					},
-				  });
-			}
-			case 'json': {
-				return new Response(text, {
-					headers: {
-					  "content-type": "application/json; charset=utf-8",
-					},
-				  });
-			}
-		}
-		return new Response("Error");
+        try {
+            const query = request.url.split('?')[1] || '';
+            
+            // 快速识别类型，避免多次字符串操作
+            let contentType: string;
+            let dataStartIndex: number;
+            
+            if (query.startsWith('json')) {
+                contentType = 'application/json; charset=utf-8';
+                dataStartIndex = 4; // "json".length
+            } else if (query.startsWith('plain')) {
+                contentType = 'text/plain; charset=utf-8';
+                dataStartIndex = 5; // "plain".length
+            } else {
+                return new Response("Error: Invalid type prefix", { status: 400 });
+            }
+            
+            const compressedData = query.slice(dataStartIndex);
+            if (!compressedData) {
+                return new Response("Error: No data provided", { status: 400 });
+            }
+            
+            const text = LZString.decompressFromEncodedURIComponent(compressedData);
+            if (!text) {
+                return new Response("Error: Decompression failed", { status: 400 });
+            }
+            
+            return new Response(text, {
+                headers: { "content-type": contentType },
+            });
+            
+        } catch (error) {
+            return new Response("Error: Processing failed", { status: 500 });
+        }
 	},
 } satisfies ExportedHandler<Env>;
