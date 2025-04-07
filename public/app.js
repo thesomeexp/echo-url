@@ -104,8 +104,23 @@ window.onload = function () {
     } else {
         document.getElementById('jsonOption').checked = true; // 设置 jsonOption 为选中
     }
-    data = data.slice(type.length); 
-    document.getElementById('myTextarea').value = LZString.decompressFromEncodedURIComponent(data)
+    data = data.slice(type.length);
+    const decompressData = LZString.decompressFromEncodedURIComponent(data)
+    let text;
+    if (type === 'json' && decompressData) {
+      try {
+        // 尝试解析为 JSON
+        const jsonData = JSON.parse(decompressData);
+        // 格式化 JSON (2个空格缩进)
+        text = JSON.stringify(jsonData, null, 2);
+      } catch (e) {
+        // 如果不是 JSON，直接使用原始数据
+        text = decompressData;
+      }
+    } else {
+      text = decompressData;
+    }
+    document.getElementById('myTextarea').value = text
     // 页面加载完成时执行一次更新函数
     updateText();
 
