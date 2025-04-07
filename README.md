@@ -2,6 +2,10 @@
 
 echo-url 是开箱即用的回显 HTTP 请求的 Serverless 应用. 
 
+路由: 
+- /edit 为编辑内容静态页
+- /echo 响应数据
+
 # 在线地址
 
 [echo.p2gg.com](https://echo.p2gg.com)
@@ -18,6 +22,9 @@ echo-url 是开箱即用的回显 HTTP 请求的 Serverless 应用.
 
 echo-url is a Serverless application that echoes HTTP requests out of the box.
 
+Routing:
+- /edit is a static page for editing content
+- /echo is for response data
 # Online Links
 
 [echo.p2gg.com](https://echo.p2gg.com)
