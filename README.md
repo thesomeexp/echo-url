@@ -8,7 +8,7 @@ echo-url 是开箱即用的回显 HTTP 请求的 Serverless 应用.
 
 # 在线地址
 
-[echo.p2gg.com](https://echo.p2gg.com)
+[echo.p2gg.workers.dev](https://echo.p2gg.workers.dev)
 
 # 例子
 
@@ -27,7 +27,7 @@ Routing:
 - /echo is for response data
 # Online Links
 
-[echo.p2gg.com](https://echo.p2gg.com)
+[echo.p2gg.workers.dev](https://echo.p2gg.workers.dev)
 
 # License
 
